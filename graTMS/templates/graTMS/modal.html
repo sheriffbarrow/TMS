@@ -1,0 +1,335 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <title>Create Complaint</title>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.4.1/css/bootstrap.min.css">
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
+    <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.4.1/js/bootstrap.min.js"></script>
+    <script src="https://use.fontawesome.com/92f6e0b1a6.js"></script>
+</head>
+{% load static %}
+<style>
+    #signature {
+        width: 100%;
+        height: auto;
+        margin-top: 30px;
+        border: 1px solid black;
+    }
+
+    input {
+        margin-bottom: 10px;
+    }
+
+    #headt {
+        background-color: #e9ecef;
+        opacity: 1;
+        color: black;
+    }
+    #myModalLabel{
+        background-color: #454545;
+        color: #ffffff;
+        text-align: center;
+        font-weight: bold;
+    }
+    .modal-header{
+        background-color: #454545;
+
+    }
+</style>
+
+<body>
+    <!-- Modal -->
+    <div class="modal fade" id="myModal" tabindex="-1" role="dialog" aria-labelledby="myModalLabel">
+        <div class="modal-dialog modal-lg" role="document">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <center><h4 class="modal-title" id="myModalLabel">...Create Complaint...</h4</center>
+                    <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span>
+                    </button>
+                </div>
+                <div class="modal-body">
+                    <div class="form-row">
+                        <div class="form-group col-md-6 mb-0">
+                            <label>office</label>
+                            <input type="text" name="office" class="form-control" id="office">
+                        </div>
+                        <div class="form-group col-md-6 mb-0">
+                            <label>office number</label>
+                            <input type="text" name="room" class="form-control" id="room">
+                        </div>
+                    </div>
+                    <div class="form-row">
+                        <div class="form-group col-md-6 mb-0">
+                            <label>complaint</label>
+                            <input type="text" name="complaint" class="form-control" id="complaint">
+                        </div>
+                        <div class="form-group col-md-6 mb-0">
+                            <label>solution</label>
+                            <input type="text" name="solution" class="form-control" id="solution">
+                        </div>
+                    </div>
+                    <div class="form-row">
+                        <div class="form-group col-md-6 mb-0">
+                            <label>status</label>
+                            <select class="custom-select" size="1" name="status" id="status">
+                                <option selected>---please select complaint status---</option>
+                                <option value='solved'>Solved</option>
+                                <option value='not solved'>Not Solved</option>
+                            </select>
+                        </div>
+                        <div class="form-group col-md-6 mb-0">
+                            <label>signatory</label>
+                            <input type="text" signatory class="form-control" id="signatory">
+                        </div>
+                    </div>
+                    <div class="form-row">
+                        <div class="form-group col-md-12 mb-0">
+                            <label>additional_Info</label>
+                            <textarea class="form-control" name="additional_Info" rows="5" id="additional_Info"></textarea>
+                        </div>
+                    </div>
+                    <br>
+                    <label>Signature</label>
+                    <div id="signature">
+                        <canvas id="signature-pad" class="signature-pad" width="700px" height="200px"></canvas>
+                    </div>
+                    <br />
+
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-danger" data-dismiss="modal">Close</button>
+                    <button type="submit" id="send" class="btn btn-info">Save changes</button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script src="{% static 'js/signature_pad.js' %}"></script>
+</body>
+
+</html>
+
+<script>
+    $(document).ready(function() {
+        var signaturePad = new SignaturePad(document.getElementById('signature-pad'));
+
+
+        $('#click').click(function() {
+            var data = signaturePad.toDataURL();
+            $('#output').val(data);
+            $("#sign_prev").show();
+            $("#sign_prev").attr("src", data);
+            // Open image in the browser
+            //window.open(data);
+        });
+        $('#send').click(function() {
+
+            var dataurl = signaturePad.toDataURL()
+            var office = $('#office').val();
+            var room = $('#room').val();
+            var complaint = $('#complaint').val();
+            var solution = $('#solution').val();
+            var status = $('#status').val();
+            var additional_Info = $('#additional_Info').val();
+            var signatory = $('#signatory').val();
+            console.log(dataurl)
+            console.log(room)
+            console.log(office)
+            $.ajax({
+                method: 'POST',
+                url: '/add_coplaint/',
+                data: {
+                    'office': office,
+                    'room': room,
+                    'complaint': complaint,
+                    'solution': solution,
+                    'status': status,
+                    'additional_Info': additional_Info,
+                    'signatory': signatory,
+                    'signature': dataurl,
+                    'csrfmiddlewaretoken': '{{ csrf_token }}',
+
+                },
+
+                success: handleSuccess,
+                error: handleError,
+
+            });
+
+            function handleSuccess(data) {
+                console.log("success")
+                console.log(data)
+
+            }
+
+            function handleError(ThrowError) {
+                console.log('error')
+                console.log(ThrowError)
+            }
+        });
+    });
+</script>
+
+<!--
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <title>Create Complaint</title>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.4.1/css/bootstrap.min.css">
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
+    <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.4.1/js/bootstrap.min.js"></script>
+    <script src="https://use.fontawesome.com/92f6e0b1a6.js"></script>
+</head>
+{% load static %}
+<style>
+    #signature {
+        width: 100%;
+        height: auto;
+        margin-top: 30px;
+        border: 1px solid black;
+    }
+
+    input {
+        margin-bottom: 10px;
+    }
+
+    #headt {
+        background-color: #e9ecef;
+        opacity: 1;
+        color: black;
+    }
+</style>
+
+<body>
+    <div class="container">
+
+        <div class="modal-header" id="headt">
+            <h4 class="modal-title">Create Complaint</h4 style="text-align:center;">
+        </div>
+        <div class="modal-body">
+            <div class="form-row">
+                <div class="form-group col-md-6 mb-0">
+                    <label>office</label>
+                    <input type="text" name="office" class="form-control" id="office">
+                </div>
+                <div class="form-group col-md-6 mb-0">
+                    <label>office number</label>
+                    <input type="text" name="room" class="form-control" id="room">
+                </div>
+            </div>
+            <div class="form-row">
+                <div class="form-group col-md-6 mb-0">
+                    <label>complaint</label>
+                    <input type="text" name="complaint" class="form-control" id="complaint">
+                </div>
+                <div class="form-group col-md-6 mb-0">
+                    <label>solution</label>
+                    <input type="text" name="solution" class="form-control" id="solution">
+                </div>
+            </div>
+            <div class="form-row">
+                <div class="form-group col-md-6 mb-0">
+                    <label>status</label>
+                    <select class="custom-select" size="1" name="status" id="status">
+                        <option selected>---please select complaint status---</option>
+                        <option value='solved'>Solved</option>
+                        <option value='not solved'>Not Solved</option>
+                    </select>
+                </div>
+                <div class="form-group col-md-6 mb-0">
+                    <label>signatory</label>
+                    <input type="text" signatory class="form-control" id="signatory">
+                </div>
+            </div>
+            <div class="form-row">
+                <div class="form-group col-md-12 mb-0">
+                    <label>additional_Info</label>
+                    <textarea class="form-control" name="additional_Info" rows="5" id="additional_Info"></textarea>
+                </div>
+            </div>
+            <br>
+            <label>Signature</label>
+            <div id="signature">
+                <canvas id="signature-pad" class="signature-pad" width="700px" height="200px"></canvas>
+            </div><br />
+
+        </div>
+        <div class="modal-footer">
+            <button type="submit" id="send" class="btn btn-default">Submit</button>
+            <button type="button" class="btn btn-default" data-dismiss="modal">Close</button>
+        </div>
+    </div>
+    </div>
+
+    <script src="{% static 'js/signature_pad.js' %}"></script>
+</body>
+
+</html>
+-->
+<!-- Modal -->
+<div class="modal fade" id="myView" tabindex="-1" role="dialog" aria-labelledby="myModalLabel">
+    <div class="modal-dialog modal-lg" role="document">
+        <div class="modal-content">
+            <div class="modal-header">
+                <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+                <center><h4 class="modal-title" id="myModalLabel">Modal title</h4>
+            </div>
+            <div class="modal-body">
+                <fieldset disabled>
+
+                    <div class="form-row">
+                        <div class="form-group col-md-6 mb-0">
+                            <label for="disabledTextInput">Office</label>
+                            <input type="text" id="disabledTextInput" class="form-control input-lg" value="{{comv.office}}" placeholder="{{comvs.office}}">
+                        </div>
+                        <div class="form-group col-md-6 mb-0">
+                            <label for="disabledTextInput">Office Number</label>
+                            <input type="text" id="disabledTextInput" class="form-control input-lg" value="{{comv.room}}" placeholder="{{comvs.room}}">
+                        </div>
+                    </div>
+                    <div class="form-row">
+                        <div class="form-group col-md-6 mb-0">
+                            <label for="disabledTextInput">Complaint</label>
+                            <input type="text" id="disabledTextInput" class="form-control input-lg">
+                        </div>
+                        <div class="form-group col-md-6 mb-0">
+                            <label for="disabledTextInput">Solution</label>
+                            <input type="text" id="disabledTextInput" class="form-control input-lg">
+                        </div>
+                    </div>
+                    <div class="form-row">
+                        <div class="form-group col-md-6 mb-0">
+                            <label for="disabledTextInput">Status</label>
+                            <input type="text" id="disabledTextInput" class="form-control input-lg">
+                        </div>
+                        <div class="form-group col-md-6 mb-0">
+                            <label for="disabledTextInput">Signatory</label>
+                            <input type="text" id="disabledTextInput" class="form-control input-lg">
+                        </div>
+                    </div>
+                    <div class="form-row">
+                        <div class="form-group col-md-12 mb-0">
+                            <label for="disabledTextInput">Signature</label>
+                            <textarea disabled class="form-control" rows="8"></textarea>
+                        </div>
+
+                    </div>
+                
+                <fieldset>
+            </div>
+        </div>
+
+        <div class=" modal-footer">
+            <button type="button" class="btn btn-danger" data-dismiss="modal">Close</button>
+        </div>
+    </div>
+</div>
+</div>
+#17a2b8;
+#e0a800

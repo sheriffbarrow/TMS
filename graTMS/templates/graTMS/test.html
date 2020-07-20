@@ -1,0 +1,75 @@
+
+{% load static %}
+<style>
+#signature{
+width: 30%;
+height: auto;
+border: 1px solid black;
+}
+</style>
+
+<!-- Signature -->
+<div id="signature" style=''>
+ <canvas id="signature-pad" class="signature-pad" width="300px" height="200px"></canvas>
+</div><br/>
+
+<input type='button' id='click' value='preview'><br/>
+
+	<textarea id='output'></textarea><br/>
+
+	<input type="button" id="send" value="submit">
+	<button >
+		<a href="">view signatures</a>
+	</button>
+<!-- Preview image -->
+<img src='' id='sign_prev' style='display: none;' />
+
+
+<!-- Script -->
+<script src="{% static 'js/jquery-3.0.0.js' type='text/javascript'%}"></script>
+<script src="{% static 'js/signature_pad.js' %}"></script>
+
+<script>
+$(document).ready(function() {
+ var signaturePad = new SignaturePad(document.getElementById('signature-pad'));
+
+ $('#click').click(function(){
+  var data = signaturePad.toDataURL();
+  $('#output').val(data);
+  $("#sign_prev").show();
+  $("#sign_prev").attr("src",data);
+  // Open image in the browser
+  //window.open(data);
+ });
+ $('#send').click(function(){
+ 	var myForm = $('.form-ajax');
+
+ 	console.log("test another function")
+ 	var dataurl = signaturePad.toDataURL()
+ 	console.log(dataurl)
+
+ 	$.ajax({
+ 		method: 'POST',
+ 		url: '/sign/',
+ 		data: {
+ 			'imagen1': dataurl,
+ 			'csrfmiddlewaretoken': '{{ csrf_token }}',
+ 		},
+ 		success: handleSuccess,
+ 		error: handleError,
+ 	});
+ 	function handleSuccess(data){
+ 		console.log("success")
+ 		console.log(data)
+ 	}
+ 	function handleError(ThrowError){
+ 		console.log('error')
+ 		console.log(ThrowError)
+ 	}
+ });
+});
+
+ </script>
+<script type="text/javascript">
+	$('#exampleModal').modal('toggle')
+</script>

@@ -1,0 +1,101 @@
+{% extends 'graTMS/base.html' %}
+{% block table %}
+
+<style>
+    * {
+        font-family: sans-serif;
+        /* Change your font family */
+    }
+
+    .content-table {
+        border-collapse: collapse;
+        margin: 10px 0;
+        font-size: 1.2em;
+        min-width: 400px;
+        border-radius: 5px 5px 0 0;
+        overflow: hidden;
+        box-shadow: 0 0 20px rgba(0, 0, 0, 0.15);
+    }
+
+    .content-table thead tr {
+        background-color: #454545;
+        color: #ffffff;
+        text-align: left;
+        font-weight: bold;
+    }
+
+    .content-table th,
+    .content-table td {
+        padding: 12px 15px;
+    }
+
+    .content-table tbody tr {
+        border-bottom: 1px solid #dddddd;
+    }
+
+    .content-table tbody tr:nth-of-type(even) {
+        background-color: #f3f3f3;
+
+    }
+
+    .content-table tbody tr:last-of-type {
+        border-bottom: 2px solid #009879;
+    }
+
+    .content-table tbody tr.active-row {
+        font-weight: bold;
+        color: #009879;
+    }
+
+    #sf {
+        margin-left: 50px;
+    }
+</style>
+<div class="card mb-4" id="cardb">
+    {% include 'graTMS/modal.html' %}
+    <div class="card-body">
+        <div class="table-responsive">
+            <table class="content-table" style="width:100%" id="dtVerticalScrollExample">
+
+                <thead>
+                    <tr>
+                        <th>#</th>
+                        <th>User</th>
+                        <th>Office</th>
+                        <th>Room</th>
+                        <th>Complaint</th>
+                        <th>Status</th>
+                        <th>Date</th>
+                        <th>Signatory</th>
+                        <th>Read / Update</th>
+                    </tr>
+                </thead>
+
+                <tbody>
+                    {% for complaint in complaint %}
+                    <tr>
+                        <td>{{complaint.id}}</td>
+                        <td>{{complaint.user}}</td>
+                        <td>{{complaint.office}}</td>
+                        <td>{{complaint.room}}</td>
+                        <td>{{complaint.complaint}}</td>
+                        <td>{{complaint.status}}</td>
+                        <td>{{complaint.date}}</td>
+                        <td>{{complaint.signatory}}</td>
+                        <td>
+                            <button  type="button" class="btn-sm btn-info" data-toggle="modal" data-target="#myView">
+                                <span class="fa fa-eye"></span>View
+                            </button>
+                            <button type="button" class="update-book btn btn-sm btn-warning" data-id="">
+                                <span class="fa fa-pen"></span>Edit
+                            </button>
+                        </td>
+                    </tr>
+                    {% endfor %}
+                </tbody>
+            </table>
+            <!-- Modal -->
+        </div>
+    </div>
+</div>
+{% endblock %}

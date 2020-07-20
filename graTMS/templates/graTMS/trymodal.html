@@ -1,0 +1,73 @@
+<!-- Button trigger modal -->
+{% load static %}
+<button type="button" class="btn btn-primary" data-toggle="modal" data-target="#exampleModal">
+    Launch demo modal
+</button>
+
+<!-- Modal -->
+<div class="modal fade" id="exampleModal" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
+    <div class="modal-dialog modal-lg" role="document">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title" id="exampleModalLabel">Modal title</h5>
+                <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                    <span aria-hidden="true">&times;</span>
+                </button>
+            </div>
+            <div class="modal-body">
+                <div class="form-row">
+                    <div class="form-group col-md-6 mb-0">
+                        <label>office</label>
+                        <input type="text" name="office" class="form-control" id="office">
+                    </div>
+                    <div class="form-group col-md-6 mb-0">
+                        <label>office number</label>
+                        <input type="text" name="room" class="form-control" id="room">
+                    </div>
+                </div>
+                <div class="form-row">
+                    <div class="form-group col-md-6 mb-0">
+                        <label>complaint</label>
+                        <input type="text" name="complaint" class="form-control" id="complaint">
+                    </div>
+                    <div class="form-group col-md-6 mb-0">
+                        <label>solution</label>
+                        <input type="text" name="solution" class="form-control" id="solution">
+                    </div>
+                </div>
+                <div class="form-row">
+                    <div class="form-group col-md-6 mb-0">
+                        <label>status</label>
+                        <select class="custom-select" size="1" name="status" id="status">
+                            <option selected>---please select complaint status---</option>
+                            <option value='solved'>Solved</option>
+                            <option value='not solved'>Not Solved</option>
+                        </select>
+                    </div>
+                    <div class="form-group col-md-6 mb-0">
+                        <label>signatory</label>
+                        <input type="text" signatory class="form-control" id="signatory">
+                    </div>
+                </div>
+                <div class="form-row">
+                    <div class="form-group col-md-12 mb-0">
+                        <label>additional_Info</label>
+                        <textarea class="form-control" name="additional_Info" rows="5" id="additional_Info"></textarea>
+                    </div>
+                </div>
+                <br>
+                <label>Signature</label>
+                <div id="signature">
+                    <canvas id="signature-pad" class="signature-pad" width="700px" height="200px"></canvas>
+                </div><br />
+
+            </div>
+        </div>
+        <div class="modal-footer">
+            <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
+            <button type="button" class="btn btn-primary">Save changes</button>
+        </div>
+    </div>
+</div>
+<script src="{% static 'js/signature_pad.js' %}"></script>
+</div>
